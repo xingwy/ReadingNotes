@@ -132,5 +132,19 @@
 #### **2. 字符串**
 
 - Redis字符串类型命令，基本是通过包装sds操作函数实现的.
-
 - 默认REDIS_ENCODING_RAW编码，但在存储到数据库是会尝试转为REDIS_ENCODING_INT.
+
+#### **3. 字典**
+
+- 有REDIS_ENCODING_ZIPLIST和REDIS_ENCODING_HT两种编码.
+- 默认ZIPLIST，节点数量过多时转HT.
+
+#### **4. 列表**
+
+- 有REDIS_ENCODING_ZIPLIST和REDIS_ENCODING_LINKEDLIST两种编码.
+- BLPOP/BRPOP/BRPOP-LPUSH都可能造成客户端被阻塞：
+  - 只有当这些命令被用于空列表时，客户端才会被阻塞.
+  - 如果列表不为空，执行无阻塞版本的LPOP/RPOP/RPOP-LPUSH.
+- 阻塞原则：
+  - 先阻塞先服务策略，阻塞队列使用哈希表的方式去记录.
+  - 
