@@ -147,4 +147,36 @@
   - 如果列表不为空，执行无阻塞版本的LPOP/RPOP/RPOP-LPUSH.
 - 阻塞原则：
   - 先阻塞先服务策略，阻塞队列使用哈希表的方式去记录.
-  - 
+  - 阻塞有时间限制，超时后可脱离阻塞状态.
+- 脱离阻塞
+  - 被动脱离：有其他客户端为造成阻塞的键推入了新的元素.
+  - 到达最大阻塞时间.
+  - 客户端终止连接.
+
+#### **5. 集合**
+
+- 有REDIS_ENCODING_INTSET和REDIS_ENCODING_HT两种编码.
+- 两种求差集的方法.复杂度均为O(N^2).
+
+#### **6. 有序集**
+
+- 有REDIS_ENCODING_ZIPLIST和REDIS_ENCODING_SKIPLIST.
+
+- 当使用ziplist去作为有序编码时，第一个元素保存元素的member域，第二个保存分数.
+
+- 多个元素按升序，同score按member字典序排序.
+
+- 当使用skiplist作为编码时：
+
+  ```c
+  /*
+  * 有序集
+  */
+  typedef struct zset {
+  // 字典
+  dict *dict;
+  // 跳跃表
+  zskiplist *zsl;
+  } zset;
+  ```
+
